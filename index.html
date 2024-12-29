@@ -8,44 +8,26 @@
 </head>
 
 <body>
-    <style>
-* {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    touch-action: none;
-    user-select: none;
-}
-
-body {
-    background: #000;
-}
-
-#t {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#g {
-    display: block;
-}
-    </style>
+    <link rel="stylesheet" href="./src/styles/style.css">
     <div id=t>
         <canvas id=g></canvas>
     </div>
-    <script src="./script/globals.js"></script>
-    <script src="./script/input/keyboard.js"></script>
-    <script src="./script/input/mouse.js"></script>
-    <script src="./script/input/resize.js"></script>
+    <div id=debug>
+        <p>X Position: <span id=xPos></span>, Y Position: <span id=yPos></span></p>
+        <p>Inputs: <span id=inputDiv></span>, Outputs: <span id=outputDiv></span></p>
+        <p>Value: <span id=valueDiv></span></p>    
+    </div>
+    <script src="./src/script/globals.js"></script>
+    <script src="./src/script/input/keyboard.js"></script>
+    <script src="./src/script/input/mouse.js"></script>
+    <script src="./src/script/input/resize.js"></script>
 
-    <script src="./script/entities/entity.js"></script>
-    <script src="./script/entities/block.js"></script>
-    <script src="./script/entities/cursor.js"></script>
-    <script src="./script/entities/sidebar.js"></script>
-    <script src="./script/engine.js"></script>
+    <script src="./src/script/entities/entity.js"></script>
+    <script src="./src/script/entities/debug.js"></script>
+    <script src="./src/script/entities/block.js"></script>
+    <script src="./src/script/entities/cursor.js"></script>
+    <script src="./src/script/entities/sidebar.js"></script>
+    <script src="./src/script/engine.js"></script>
 </body>
 
 </html>

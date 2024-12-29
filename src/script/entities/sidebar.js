@@ -4,8 +4,8 @@ class SideBar extends Entity {
         this.categories = ["sidebar"]
         this.initialBlocks = []
         for(let i=0; i<Object.keys(types).length; i++) {
-            let data = {input: []}
-            let block = add(new Block(100, i * (types[Object.keys(types)[i]].height + 10) + 50, Object.keys(types)[i], data))
+            let data = {input: ["", ""], sidebar: true}
+            let block = add(new Block(100, i * (types[Object.keys(types)[i]].height + 20) + 50, Object.keys(types)[i], data))
             this.initialBlocks.push(block)
             block.layer = 2000;
         }
@@ -16,8 +16,8 @@ class SideBar extends Entity {
     run() {
         for(let i=0; i<this.initialBlocks.length; i++) {
             if(this.initialBlocks[i].x != this.initialBlocks[i].initialX || this.initialBlocks[i].y != this.initialBlocks[i].initialY) {
-                let data = {input: []}
-                let block = add(new Block(100, i * (types[Object.keys(types)[i]].height + 10) + 50, Object.keys(types)[i], data))
+                let data = {input: ["", ""], sidebar: true}
+                let block = add(new Block(100, i * (types[Object.keys(types)[i]].height + 20) + 50, Object.keys(types)[i], data))
                 this.initialBlocks[i] = block;
             }
         }

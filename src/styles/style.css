@@ -1,0 +1,32 @@
+* {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    touch-action: none;
+    user-select: none;
+}
+
+body {
+    background: #000;
+}
+
+#t {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#g {
+    display: block;
+}
+#debug {
+    position: fixed;
+    width: fit-content;
+    height: fit-content;
+    background: #000000fa;
+    font-family: 'Courier New', Courier, monospace;
+    color: #fff;
+    padding: 20px;
+}

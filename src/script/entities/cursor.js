@@ -1,25 +1,32 @@
 class Cursor extends Entity {
-    constructor(target) {
+    constructor(target, end, type) {
         super()
         this.categories = ["cursor"]
-        let evaluate = Array.from(category("blocks"));
-        this.index = target;
-        this.target = evaluate[target];
+        this.end = "";
+        for(let i=0; i<end.length; i++) {
+            if(end[i] != "") {
+                this.end = end[i]
+                this.originIndex = i;
+            }
+        }
+        this.type = type
+        this.index = target.index;
+        this.target = target;
     }
     get z() {
-        return 1
+        return 9999
     }
     run() {
         this.x = MOUSE_POSITION.x;
         this.y = MOUSE_POSITION.y;
-        if(!MOUSE_RIGHT_DOWN) {
+        if(!MOUSE_DOWN) {
             this.remove()
         }
     }
     draw() {
         ctx.beginPath();
-        let targetX = this.target.x
-        let targetY = this.target.y + this.target.height / 2
+        let targetX = this.end.x
+        let targetY = this.end.y
         ctx.fillStyle = "black"
         ctx.lineWidth = 2
         ctx.moveTo(targetX, targetY)
