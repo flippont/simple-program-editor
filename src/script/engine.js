@@ -29,6 +29,7 @@ let lastFrame = performance.now();
 
 //render loop
 function draw() {
+    document.body.style.cursor = "default"
     const current = performance.now();
     const elapsed = (current - lastFrame) / 1000;
     lastFrame = current;
@@ -45,7 +46,7 @@ function draw() {
     for (const line of [
         (DEBUG) ? ("FPS: " + ~~(1 / elapsed)) : "",
         (DEBUG) ? ("Entities: " + sortedEntities.length) : "",
-        "Version: 0.2",
+        "Version: 0.25",
     ].reverse()) {
         y -= 20;
         ctx.fillText(line, CANVAS_WIDTH - 20, y);

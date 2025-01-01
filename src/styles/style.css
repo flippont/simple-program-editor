@@ -30,3 +30,35 @@ body {
     color: #fff;
     padding: 20px;
 }
+#mainButton, #nameInput, #colourInput {
+    position: fixed;
+    z-index: 200;
+    right: 0;
+    width: fit-content;
+    border: 0;
+    outline: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    height: auto;
+    padding: 10px;
+    margin: 20px;
+}
+
+#nameInput {
+    top: 0;
+    text-transform: uppercase;
+    background: #fff;
+}
+
+#mainButton {
+    cursor: pointer;
+    top: 120px
+}
+
+#colourInput{
+    top: 60px;
+    height: 40px;
+    width: 40px;
+    padding: 0px;
+}

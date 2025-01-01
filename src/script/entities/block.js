@@ -1,10 +1,13 @@
 class Block extends Entity {
     constructor(x, y, type, data) {
         super();
-        this.categories = ["blocks"]
         this.x = x;
         this.y = y;
         this.type = type;
+        this.categories = ["blocks"]
+        if(this.type == "input") {
+            this.categories.push("input")
+        }
         this.data = {inputs: (data.inputs || []), outputs: (data.outputs || [])};
         this.currentValue = [];
         if (!data.inputs) {
@@ -27,13 +30,29 @@ class Block extends Entity {
         this.initialY = y;
         this.hoveredEnd = "";
         this.dots = [];
+        this.inputIndex = "";
     }
+    extractTrueValues(array) {
+        function resolveElement(element) {
+            if (Array.isArray(element)) {
+                // Return the first element as the 'true value' recursively
+                return resolveElement(element[0]);
+            }
+            return element;
+        }
+    
+        // Process the input array to extract true values for each element
+        return array.map(resolveElement);
+    }
+    
     run() {
         let evaluate = Array.from(category("blocks"));
-        if(this.x != this.initialX || this.y != this.initialY) {
-            if(!MOUSE_DOWN && this.x < 200) {
-                this.destroy()
-            }
+        let evalInputs = Array.from(category("input"));
+        if(this.type == "input") {
+            this.inputIndex = evalInputs.indexOf(this)
+        }
+        if(!MOUSE_DOWN && this.x < 200) {
+            this.destroy()
         }
         // Gather inputs
         const inputs = [];
@@ -52,24 +71,15 @@ class Block extends Entity {
                 this.toggled = false;
             }
         } else {
-           // Evaluate the logic for the block
-            const truthTable = types[this.type].truthTable;
-            if (truthTable) {
-                // Determine the index in the truth table based on inputs
-                const index = parseInt(inputs.join(''), 2); // Convert binary input array to decimal index
-                const outputValues = truthTable[index];
-                // Safeguard against null or undefined outputValues
-                if (outputValues) {
-                    for (let i = 0; i < this.currentValue.length; i++) {
-                        this.currentValue[i] = outputValues[i] ?? 0;
-                    }
-                } else {
-                    // Fallback: reset outputs to 0 if truth table lookup fails
-                    this.currentValue.fill(0);
+            // accidentally did it wrong. It works, and this is better for performance so I'm not going to fix it
+            // All it means is that the pre-programmed ones are a tad bit slower
+            // Ah well the max is 2 inputs with the AND gate so it should be i
+            if(types[this.type].preProgrammed) {
+                for (let i = 0; i < this.currentValue.length; i++) {
+                    this.currentValue[i] = types[this.type].logic(inputs) ?? 0;
                 }
             } else {
-                // Fallback: reset outputs to 0 if the truth table is not defined
-                this.currentValue.fill(0);
+                this.currentValue = this.extractTrueValues(types[this.type].logic(inputs)) ?? 0;
             }
         }
     
@@ -272,7 +282,7 @@ class Block extends Entity {
                 yPos.innerHTML = Math.floor(this.y)
                 inputDiv.innerHTML = JSON.stringify(this.data.inputs)
                 outputDiv.innerHTML = JSON.stringify(this.data.outputs)
-                valueDiv.innerHTML = JSON.stringify(this.currentValue)
+                valueDiv.innerHTML = JSON.stringify(this.currentValue);
                 debug.style.top = MOUSE_POSITION.y + "px"
                 debug.style.left = MOUSE_POSITION.x + "px"
             }
