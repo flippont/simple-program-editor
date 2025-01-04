@@ -9,12 +9,21 @@
 
 <body>
     <link rel="stylesheet" href="./src/styles/style.css">
-    <input type="text" id=nameInput placeholder="Gate name">
-    <input type="color" id=colourInput name=head value=#e66465 onchange="colourValue = this.value"/>
-    <button id=mainButton onclick="createNewBlock()">Create</button>
-    <div id=t>
-        <canvas id=g></canvas>
+    
+    <div id=popUp>
+        <div class="modal-content">
+            <input type="text" id=nameInput placeholder="Gate name">
+            <div id=colourPickerWrapper>
+                <input type="color" id=colourInput name=head value=#e66465 onchange="colourValue = this.value"/>
+                <span class="colourPreview">Colour Preview</span>
+            </div>
+            <div class="buttonCont">
+                <button id=cancelButton onclick="closePopUp()">Cancel</button>
+                <button id=mainButton onclick="createNewBlock();closePopUp()">Save</button>
+            </div>
+        </div>
     </div>
+    <canvas id=g></canvas>
     <div id=debug>
         <p>
             X Position: <span id=xPos></span>, Y Position: <span id=yPos></span>
@@ -26,18 +35,18 @@
             Value: <span id=valueDiv></span>
         </p>    
     </div>
-    <script src="./src/script/globals.js"></script>
-    <script src="./src/script/input/keyboard.js"></script>
-    <script src="./src/script/input/mouse.js"></script>
-    <script src="./src/script/input/resize.js"></script>
+    <script src="./script/index.js"></script>
+    <script src="./script/globals.js"></script>
+    <script src="./script/input/keyboard.js"></script>
+    <script src="./script/input/mouse.js"></script>
+    <script src="./script/input/resize.js"></script>
 
-    <script src="./src/script/entities/entity.js"></script>
-    <script src="./src/script/entities/debug.js"></script>
-    <script src="./src/script/entities/block.js"></script>
-    <script src="./src/script/entities/cursor.js"></script>
-    <script src="./src/script/entities/sidebar.js"></script>
-    <script src="./src/script/entities/button.js"></script>
-    <script src="./src/script/engine.js"></script>
+    <script src="./script/entities/entity.js"></script>
+    <script src="./script/entities/block.js"></script>
+    <script src="./script/entities/cursor.js"></script>
+    <script src="./script/entities/sidebar.js"></script>
+    <script src="./script/entities/button.js"></script>
+    <script src="./script/engine.js"></script>
 </body>
 
 </html>

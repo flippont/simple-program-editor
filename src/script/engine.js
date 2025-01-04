@@ -46,7 +46,7 @@ function draw() {
     for (const line of [
         (DEBUG) ? ("FPS: " + ~~(1 / elapsed)) : "",
         (DEBUG) ? ("Entities: " + sortedEntities.length) : "",
-        "Version: 0.25",
+        "Version: " + version,
     ].reverse()) {
         y -= 20;
         ctx.fillText(line, CANVAS_WIDTH - 20, y);

@@ -5,9 +5,6 @@ class Block extends Entity {
         this.y = y;
         this.type = type;
         this.categories = ["blocks"]
-        if(this.type == "input") {
-            this.categories.push("input")
-        }
         this.data = {inputs: (data.inputs || []), outputs: (data.outputs || [])};
         this.currentValue = [];
         if (!data.inputs) {
@@ -21,7 +18,9 @@ class Block extends Entity {
                 this.currentValue.push(1)
             }
         }
-
+        if(this.type == "output") {
+            this.currentValue = [0]
+        }
         this.width = types[this.type].width;
         this.height = types[this.type].height;
         this.index = 0;
@@ -30,7 +29,6 @@ class Block extends Entity {
         this.initialY = y;
         this.hoveredEnd = "";
         this.dots = [];
-        this.inputIndex = "";
     }
     extractTrueValues(array) {
         function resolveElement(element) {
@@ -47,22 +45,11 @@ class Block extends Entity {
     
     run() {
         let evaluate = Array.from(category("blocks"));
-        let evalInputs = Array.from(category("input"));
-        if(this.type == "input") {
-            this.inputIndex = evalInputs.indexOf(this)
-        }
         if(!MOUSE_DOWN && this.x < 200) {
             this.destroy()
         }
-        // Gather inputs
-        const inputs = [];
-        for (let i = 0; i < this.data.inputs.length; i++) {
-            inputs.push((this.data.inputs[i] && this.data.inputs[i][0] != -1) ? evaluate[this.data.inputs[i][0]].currentValue[this.data.inputs[i][1]] : 0)
-        }
         // Convert inputs to index
-        if (this.type === "output") {
-            this.currentValue[0] = inputs[0]; // Directly use the first input's value
-        } else if(this.type === "input") {
+        if(this.type === "input") {
             if (DOWN[32] && !this.toggled && this.hovered) {
                 this.currentValue[0] = (this.currentValue[0] === 0) ? 1 : 0;
                 this.toggled = true;
@@ -70,17 +57,7 @@ class Block extends Entity {
             if (!DOWN[32]) {
                 this.toggled = false;
             }
-        } else {
-            // accidentally did it wrong. It works, and this is better for performance so I'm not going to fix it
-            // All it means is that the pre-programmed ones are a tad bit slower
-            // Ah well the max is 2 inputs with the AND gate so it should be i
-            if(types[this.type].preProgrammed) {
-                for (let i = 0; i < this.currentValue.length; i++) {
-                    this.currentValue[i] = types[this.type].logic(inputs) ?? 0;
-                }
-            } else {
-                this.currentValue = this.extractTrueValues(types[this.type].logic(inputs)) ?? 0;
-            }
+            this.changeStateBelow()
         }
     
         this.hovered = false
@@ -97,6 +74,48 @@ class Block extends Entity {
         } else {
             this.layer = 20;
             holding = -1;
+        }
+    }
+    changeStateBelow() {
+        let evaluate = Array.from(category("blocks"));
+        for(let i=0; i<this.data.outputs.length; i++) {
+            for(let j=0; j<this.data.outputs[i].length; j++) {
+                let subject = evaluate[this.data.outputs[i][j]];
+                if(subject.type != "output") {
+                    let newInputs = []
+                    // Gather inputs
+                    for (let k = 0; k < subject.data.inputs.length; k++) {
+                        newInputs.push((subject.data.inputs[k] && subject.data.inputs[k][0] != -1) ? evaluate[subject.data.inputs[k][0]].currentValue[subject.data.inputs[k][1]] : 0)
+                    }
+                    subject.changeState(newInputs)
+                } else {
+                    subject.currentValue = this.currentValue;
+                }
+                if(subject.data.outputs) {
+                    subject.changeStateBelow()
+                }
+            }
+        }
+    }
+    changeState(inputs) {
+        let table = types[this.type].table;
+        // Determine the number of inputs and outputs from the table
+        const inputKeys = Object.keys(table).filter(key => key.startsWith('i'));
+        const outputKeys = Object.keys(table).filter(key => key.startsWith('o'));
+
+        // Iterate through the rows of the table
+        for (let rowIndex = 0; rowIndex < table[inputKeys[0]].length; rowIndex++) {
+            let match = true;
+            for (let i = 0; i < inputKeys.length; i++) {
+                if (table[inputKeys[i]][rowIndex] !== inputs[i]) {
+                    match = false;
+                    break;
+                }
+            }
+            // If inputs match, return the corresponding output(s)
+            if (match) {
+                this.currentValue =  outputKeys.map(outputKey => table[outputKey][rowIndex]);
+            }
         }
     }
 
