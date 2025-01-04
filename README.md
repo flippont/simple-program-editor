@@ -5,11 +5,11 @@ Make a computer program!
 - Drag logic gates in from the side
 - Click and drag from a node on an input gate to another gate to connect them.
 - Press space hovering over input bits to change their value.
-- Delete a gate by dragging it to the side.
+- Delete a gate by dragging it to the right hand side.
+- Create new gates by pressing the create button, and naming the gate and specifying the colour.
 
 Based on a [video series](https://youtu.be/QZwneRb-zqA?feature=shared) by Sebastian Lague. Just wanted to see what it will look like in JavaScript. 
-It currently supports multiple inputs and outputs, but there still isn't a way to make custom gates. 
-The custom gate currently outputs the respective value for an "AND" gate in the first output and an "OR" gate in the second.
+Still lacking 7 segment displays, and I'm planning to add more stuff like a gate filter and a better wiring system in the future.
 
 Not sure if this is turing complete (yet), but working on it. 
 
