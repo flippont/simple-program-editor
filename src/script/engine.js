@@ -11,6 +11,13 @@ function category(category) {
     return entityCategories.get(category) || [];
 }
 
+function clearBlocks() {
+    let blocks = Array.from(category("blocks"))
+    blocks.forEach((element) => {
+        element.remove()
+    })
+}
+
 function add(entity) {
     if (entities.has(entity)) return;
     entities.add(entity)

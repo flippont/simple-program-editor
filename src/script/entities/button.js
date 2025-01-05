@@ -1,5 +1,5 @@
 class Button extends Entity {
-    constructor(x, y, width, height, text, colour = "#FFF", logic) {
+    constructor(x, y, width, height, text, colour = "#FFF", border = false, logic = "") {
         super()
         this.categories = ["button"]
         this.x = this.defX = x;
@@ -8,6 +8,7 @@ class Button extends Entity {
         this.function = logic;
         this.height = height;
         this.colour = colour;
+        this.border = border;
         this.text = text;
         this.triggered = false;
         this.hovered = false;
@@ -17,6 +18,7 @@ class Button extends Entity {
     }
     run() {
         this.hovered = false;
+        if(holding != -1) return false
         if(typeof this.defX == "string") {
             this.x = eval(this.defX)
         }
@@ -24,7 +26,7 @@ class Button extends Entity {
             this.y = eval(this.defY)
         }
         if(MOUSE_POSITION.x > this.x - this.width / 2 && MOUSE_POSITION.x < this.x + this.width / 2) {
-            if(MOUSE_POSITION.y > (this.y - this.height / 2) && MOUSE_POSITION.y < (this.y + this.height / 2)) {
+            if(MOUSE_POSITION.y > this.y && MOUSE_POSITION.y < (this.y + this.height)) {
                 this.hovered = true;
                 if(MOUSE_DOWN && !this.triggered) {
                     this.function()
@@ -42,11 +44,19 @@ class Button extends Entity {
             ctx.globalAlpha = 0.4;
         }
         ctx.fillStyle = this.colour;
-        ctx.fillRect(this.x - this.width/2, this.y - this.height/2, this.width, this.height)
+        ctx.strokeStyle = this.border;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.rect(this.x - this.width/2, this.y, this.width, this.height)
+        ctx.fill();
+        if(this.border) {
+            ctx.stroke();
+        }
+        ctx.closePath();
         ctx.textAlign = "center";
         ctx.textBaseline = "middle"
         ctx.font = "bold 15px Arial"
         ctx.fillStyle = "white"
-        ctx.fillText(this.text, this.x, this.y);
+        ctx.fillText(this.text, this.x, this.y + this.height / 2);
     }
 }

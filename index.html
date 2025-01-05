@@ -10,6 +10,7 @@
 <body>
     <link rel="stylesheet" href="./src/styles/style.css">
     
+   
     <div id=popUp>
         <div class="modal-content">
             <input type="text" id=nameInput placeholder="Gate name">
@@ -19,7 +20,7 @@
             </div>
             <div class="buttonCont">
                 <button id=cancelButton onclick="closePopUp()">Cancel</button>
-                <button id=mainButton onclick="createNewBlock();closePopUp()">Save</button>
+                <button id=mainButton onclick="createNewBlock();">Save</button>
             </div>
         </div>
     </div>
@@ -43,6 +44,10 @@
 
     <script src="./src/script/entities/entity.js"></script>
     <script src="./src/script/entities/block.js"></script>
+    <script src="./src/script/entities/scrollbar.js"></script>
+    <script src="./src/script/entities/segment.js"></script>
+    <script src="./src/script/entities/LED.js"></script>
+    <script src="./src/script/entities/default.js"></script>
     <script src="./src/script/entities/cursor.js"></script>
     <script src="./src/script/entities/sidebar.js"></script>
     <script src="./src/script/entities/button.js"></script>

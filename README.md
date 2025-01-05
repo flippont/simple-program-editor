@@ -7,9 +7,10 @@ Make a computer program!
 - Press space hovering over input bits to change their value.
 - Delete a gate by dragging it to the right hand side.
 - Create new gates by pressing the create button, and naming the gate and specifying the colour.
+- The colour of the LEDs can be cycled by pressing the space bar.
 
 Based on a [video series](https://youtu.be/QZwneRb-zqA?feature=shared) by Sebastian Lague. Just wanted to see what it will look like in JavaScript. 
-Still lacking 7 segment displays, and I'm planning to add more stuff like a gate filter and a better wiring system in the future.
+I'm planning to add more stuff like a gate filter and a better wiring system in the future.
 
 Not sure if this is turing complete (yet), but working on it. 
 

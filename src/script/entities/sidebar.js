@@ -5,15 +5,29 @@ class SideBar extends Entity {
         this.regenerate()
         add(new Button(
             "CANVAS_WIDTH - 70", 
-            50, 
+            20, 
             100, 
             40, 
             "Create", 
-            "#ggg", 
+            "#111", 
+            false,
             () => {
                 openPopUp()
             }
         ))
+        add(new Button(
+            "CANVAS_WIDTH - 70", 
+            70,
+            100, 
+            40, 
+            "Clear", 
+            "#111", 
+            false,
+            () => {
+                clearBlocks()
+            }
+        ))
+        add(new scrollBar(200, 0, 20, 100))
     }
     get z() {
         return 10
@@ -26,30 +40,32 @@ class SideBar extends Entity {
         for(let block of blocks) {
             block.remove();
         }
+        totalHeight = 0;
         for(let i=0; i<Object.keys(types).length; i++) {
             let data = {input: ["", ""]};
-            let display = Object.keys(types)[i].toUpperCase();
-            if(Object.keys(types)[i] == "input") {
-                display = 1;
-            }
-            if(Object.keys(types)[i] == "output") {
-                display = 0;
-            }
+            totalHeight += (i - 1 >= 0) ? 50 : 20;
             add(new Button(
                 100, 
-                i * (types[Object.keys(types)[i]].height + 20) + 50, 
-                types[Object.keys(types)[i]].width, 
-                types[Object.keys(types)[i]].height, 
-                display, 
-                types[Object.keys(types)[i]].colour, 
+                `${totalHeight} - scrollPos`, 
+                120, 
+                40, 
+                Object.keys(types)[i].toUpperCase(), 
+                "#303030", 
+                false,
                 () => {
-                    add(new Block(MOUSE_POSITION.x, MOUSE_POSITION.y, Object.keys(types)[i], data))
+                    if(Object.keys(types)[i] == "segment") {
+                        add(new Segment(MOUSE_POSITION.x, MOUSE_POSITION.y, data))
+                    } else if(Object.keys(types)[i] == "LED") {
+                        add(new LED(MOUSE_POSITION.x, MOUSE_POSITION.y, data))
+                    } else {
+                        add(new defaultBlock(MOUSE_POSITION.x, MOUSE_POSITION.y, Object.keys(types)[i], data))
+                    }
                 }
             ))
         }
     }
     draw() {
         ctx.fillStyle = "gray"
-        ctx.fillRect(0, 0, 200, CANVAS_HEIGHT)
+        ctx.fillRect(0, 0, 220, CANVAS_HEIGHT)
     }
 }

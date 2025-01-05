@@ -17,7 +17,9 @@ let toggleDrag = false;
 let checkArray = []
 let GAME_PAUSED;
 let DEBUG = false;
-let version = 0.3;
+let version = 0.4;
+let scrollPos = 0;
+let totalHeight = 0;
 
 let colourValue = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 colourInput.value = colourValue
@@ -36,6 +38,20 @@ let types = {
         width: 30,
         height: 40,
         colour: "blue"
+    },
+    "LED": {
+        inputs: 1,
+        outputs: 1,
+        width: 30,
+        height: 40,
+        colour: "black"
+    },
+    "segment": {
+        inputs: 8,
+        outputs: 0,
+        width: 120,
+        height: 80,
+        colour: "black"
     },
     "AND": {
         inputs: 2,
@@ -104,7 +120,6 @@ function generateTable(name) {
             table[`o${j}`].push(outputBlocks[j].currentValue[0]);
         }
     }
-    console.log(table)
     let object = {
         inputs: inputBlocks.length,
         outputs: outputBlocks.length,
@@ -116,4 +131,5 @@ function generateTable(name) {
     types[name] = object;
     sidebar[0].regenerate();
     colourInput.value = colourValue
+    closePopUp()
 }
