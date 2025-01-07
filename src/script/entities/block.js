@@ -68,6 +68,7 @@ class Block extends Entity {
                 this.x = MOUSE_POSITION.x - this.offSet.x;
                 this.y = MOUSE_POSITION.y - this.offSet.y;
             }
+            document.body.style.cursor = "grabbing"
         } else {
             this.layer = 20;
             holding = -1;
@@ -85,7 +86,9 @@ class Block extends Entity {
         for(let i=0; i<this.data.outputs.length; i++) {
             if(evaluate[this.data.outputs[i][0]] == undefined) {
                 this.data.outputs[i] = [];
-                this.currentValue[i] = 0;
+                if(this.type != "input" || this.type != "LED") {
+                    this.currentValue[i] = 0;
+                }
             }
         }
     }
@@ -96,7 +99,7 @@ class Block extends Entity {
             for(let j=0; j<this.data.outputs[i].length; j++) {
                 let subject = evaluate[this.data.outputs[i][j]];
                 if(subject == undefined) return
-                if(subject.type != "output" && subject.type != "LED") {
+                if(subject.type != "output") {
                     let newInputs = []
                     // Gather inputs
                     for (let k = 0; k < subject.data.inputs.length; k++) {
@@ -156,6 +159,9 @@ class Block extends Entity {
             if(MOUSE_POSITION.y > (this.y - this.height / 2) && MOUSE_POSITION.y < (this.y + this.height / 2)) {
                 this.hovered = true;
                 if(cursors.length === 0) {
+                    if(!isHovered) {
+                        document.body.style.cursor = "grab"
+                    }
                     if(MOUSE_DOWN && holding == -1 && !isHovered && !selector[0].active) {
                         holding = this.index + 1;
                     }
@@ -168,6 +174,7 @@ class Block extends Entity {
     }
 
     handleCursor() {
+
         // Cursor Holding
         let cursors = Array.from(category("cursor"));
         let evaluate = Array.from(category("blocks"));

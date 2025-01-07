@@ -15,6 +15,7 @@ class LED extends Block {
         this.triggered = false;
     }
     run() {
+        super.run();
         if(DOWN[32] && this.hovered) {
             if(!this.triggered) {
                 this.cycle++;
@@ -26,7 +27,6 @@ class LED extends Block {
         if(this.cycle >= this.states.length) {
             this.cycle = 0;
         }
-        super.run();
     }
     draw() {
         super.draw();

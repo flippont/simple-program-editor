@@ -17,8 +17,8 @@ let toggleDrag = false;
 let checkArray = [];
 let selectors = [];
 let GAME_PAUSED;
-let DEBUG = false;
-let version = 0.5;
+let DEBUG = true;
+let version = 0.52;
 let scrollPos = 0;
 let totalHeight = 0;
 
@@ -46,6 +46,10 @@ let types = {
         outputs: 1,
         width: 30,
         height: 40,
+        table: {
+            i0: [0, 1],
+            o0: [0, 1],
+        },
         colour: "black"
     },
     "segment": {
