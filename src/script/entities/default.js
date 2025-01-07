@@ -13,7 +13,11 @@ class defaultBlock extends Block {
         if (!data.outputs) {
             for (let i = 0; i < types[this.type].outputs; i++) {
                 this.data.outputs.push([]);
-                this.currentValue.push(1)
+                if(this.type != "input") {
+                    this.currentValue.push(0)
+                } else {
+                    this.currentValue.push(1)
+                }
             }
         }
         if(this.type == "output") {

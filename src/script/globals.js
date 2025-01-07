@@ -12,18 +12,20 @@ let entityCategories = new Map();
 let sortedEntities = [];
 let entityPos = {}
 let holding = -1;
-let blocks = []
+let blocks = [];
 let toggleDrag = false;
-let checkArray = []
+let checkArray = [];
+let selectors = [];
 let GAME_PAUSED;
 let DEBUG = false;
-let version = 0.4;
+let version = 0.5;
 let scrollPos = 0;
 let totalHeight = 0;
 
 let colourValue = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 colourInput.value = colourValue
 canvasPrototype = CanvasRenderingContext2D.prototype;
+
 let types = {
     "input": {
         inputs: 0,
@@ -86,6 +88,8 @@ function createNewBlock() {
     if(name.trim().length != 0 && types[name] == undefined && gates.filter((gate) => gate.type == "input").length > 0) {
         generateTable(name);
         colourValue = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+        colourInput.value = colourValue = colourValue;
+        colourPickerWrapper.style.backgroundColor = colourValue;
     }
 }
 
@@ -95,6 +99,7 @@ function generateTable(name) {
     const inputBlocks = [];    
     const outputBlocks = []; 
     let table = {};
+    colourValue = colourInput.value;
     for(let i=0; i<gates.length; i++) {
         if(gates[i].type == "input") {
             inputBlocks.push(gates[i])
@@ -130,6 +135,5 @@ function generateTable(name) {
     }
     types[name] = object;
     sidebar[0].regenerate();
-    colourInput.value = colourValue
     closePopUp()
 }

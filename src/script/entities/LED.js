@@ -4,9 +4,10 @@ class LED extends Block {
         this.x = x;
         this.y = y;
         this.type = "LED"
-        this.data = {inputs: (data.inputs || [0]), outputs: (data.outputs || [0])};
+        this.data = {inputs: (data.inputs || [[-1]]), outputs: (data.outputs || [[]])};
         this.width = types["LED"].width;
         this.height = types["LED"].height;
+        this.currentValue = [0];
         this.initialX = x;
         this.initialY = y;
         this.cycle = 0;
@@ -14,7 +15,7 @@ class LED extends Block {
         this.triggered = false;
     }
     run() {
-        if(DOWN[32]) {
+        if(DOWN[32] && this.hovered) {
             if(!this.triggered) {
                 this.cycle++;
             }
@@ -30,7 +31,8 @@ class LED extends Block {
     draw() {
         super.draw();
         ctx.beginPath();
-        ctx.fillStyle = (this.currentValue[0]) ? this.states[this.cycle] : "#242428";
+        ctx.fillStyle =  this.states[this.cycle];
+        ctx.globalAlpha = (this.currentValue[0]) ? 1 : 0.5;
         ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
         ctx.fill()
     }

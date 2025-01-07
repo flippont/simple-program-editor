@@ -29,7 +29,8 @@ class Button extends Entity {
             if(MOUSE_POSITION.y > this.y && MOUSE_POSITION.y < (this.y + this.height)) {
                 this.hovered = true;
                 if(MOUSE_DOWN && !this.triggered) {
-                    this.function()
+                    this.function();
+                    selectors = [];
                     this.triggered = true;
                 }
             }

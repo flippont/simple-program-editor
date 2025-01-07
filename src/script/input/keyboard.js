@@ -2,7 +2,6 @@ let DOWN = {};
 onkeydown = e => {
     if (e.ctrlKey && e.key == 's') {
         e.preventDefault()
-        saveAndRun()
     }
     DOWN[e.keyCode] = true
 };

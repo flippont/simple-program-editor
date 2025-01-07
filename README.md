@@ -2,10 +2,11 @@
 A simple program editor with basic logic gates.
 
 Make a computer program!
-- Drag logic gates in from the side
+- Drag logic gates in from the side.
 - Click and drag from a node on an input gate to another gate to connect them.
+- Click and drag on the canvas or control click to select multiple gates.
 - Press space hovering over input bits to change their value.
-- Delete a gate by dragging it to the right hand side.
+- Delete a gate by dragging it to the right hand side, or by selecting it and pressing delete.
 - Create new gates by pressing the create button, and naming the gate and specifying the colour.
 - The colour of the LEDs can be cycled by pressing the space bar.
 

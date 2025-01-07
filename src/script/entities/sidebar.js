@@ -3,6 +3,8 @@ class SideBar extends Entity {
         super()
         this.categories = ["sidebar"]
         this.regenerate()
+        add(new Selector())
+        add(new WireHandle())
         add(new Button(
             "CANVAS_WIDTH - 70", 
             20, 
@@ -30,7 +32,7 @@ class SideBar extends Entity {
         add(new scrollBar(200, 0, 20, 100))
     }
     get z() {
-        return 10
+        return 1
     }
     run() {
     }

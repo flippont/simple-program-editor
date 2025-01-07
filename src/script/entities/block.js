@@ -11,7 +11,7 @@ class Block extends Entity {
         this.dots = [];
         this.width = this.height = 0;
         this.initialX = this.initialY = 0;
-        this.offSet = {x: 0, y: 0};
+        this.offSet = {x:0, y: 0};
     }
     extractTrueValues(array) {
         function resolveElement(element) {
@@ -28,6 +28,7 @@ class Block extends Entity {
     
     run() {
         let evaluate = Array.from(category("blocks"));
+
         if(!MOUSE_DOWN && this.x < 220) {
             this.destroy()
         }
@@ -47,19 +48,45 @@ class Block extends Entity {
         this.index = evaluate.indexOf(this)
 
         this.mouseOver()
-
+        this.checkInputValid()
         // Mouse down check
         if(MOUSE_DOWN) {
             if(holding != (this.index + 1)) return
+            if(DOWN[17] && !selectors.includes(this)) {
+                selectors.push(this);
+            } else {
+                if(!selectors.includes(this)) {
+                    selectors = [];
+                    selectors.push(this);
+                }
+            }
             if(this.layer == 20) {
                 this.offSet = {x: DOWN_MOUSE_POSITION.x - this.x, y: DOWN_MOUSE_POSITION.y - this.y}
             }
             this.layer = 999;
-            this.x = MOUSE_POSITION.x - this.offSet.x;
-            this.y = MOUSE_POSITION.y - this.offSet.y;
+            if(selectors.length == 1) {
+                this.x = MOUSE_POSITION.x - this.offSet.x;
+                this.y = MOUSE_POSITION.y - this.offSet.y;
+            }
         } else {
             this.layer = 20;
             holding = -1;
+        }
+    }
+
+    checkInputValid() {
+        let evaluate = Array.from(category("blocks"));
+
+        for(let i=0; i<this.data.inputs.length; i++) {
+            if(evaluate[this.data.inputs[i][0]] == undefined) {
+                this.data.inputs[i] = [-1]
+            }
+        }
+        for(let i=0; i<this.data.outputs.length; i++) {
+            if(evaluate[this.data.outputs[i][0]] == undefined) {
+                this.data.outputs[i] = [];
+                this.currentValue[i] = 0;
+            }
         }
     }
 
@@ -68,6 +95,7 @@ class Block extends Entity {
         for(let i=0; i<this.data.outputs.length; i++) {
             for(let j=0; j<this.data.outputs[i].length; j++) {
                 let subject = evaluate[this.data.outputs[i][j]];
+                if(subject == undefined) return
                 if(subject.type != "output" && subject.type != "LED") {
                     let newInputs = []
                     // Gather inputs
@@ -115,6 +143,7 @@ class Block extends Entity {
     mouseOver() {
         let isHovered = false;
         let cursors = Array.from(category("cursor"));
+        let selector = Array.from(category("selector"));
         
         for(let i=0; i<this.hoveredEnd.length; i++) {
             if(this.hoveredEnd[i]) {
@@ -127,19 +156,18 @@ class Block extends Entity {
             if(MOUSE_POSITION.y > (this.y - this.height / 2) && MOUSE_POSITION.y < (this.y + this.height / 2)) {
                 this.hovered = true;
                 if(cursors.length === 0) {
-                    if(MOUSE_DOWN && holding == -1 && !isHovered) {
+                    if(MOUSE_DOWN && holding == -1 && !isHovered && !selector[0].active) {
                         holding = this.index + 1;
                     }
                 }
             }
         }
-        if(isHovered) {
+        if(isHovered && !selector[0].active) {
             this.handleCursor()
         }
     }
 
     handleCursor() {
-
         // Cursor Holding
         let cursors = Array.from(category("cursor"));
         let evaluate = Array.from(category("blocks"));
@@ -175,7 +203,6 @@ class Block extends Entity {
                                 subject.data.outputs[outputNode].splice(subIndex, 1)
                             }
                         }
-
                         let indexedArray = evaluate[selected].data.outputs[cursors[0].originIndex - evaluate[selected].data.inputs.length];
                         let outputCount = indexedArray.filter(x => x==this.index).length
                         if(outputCount < types[this.type].inputs) {
@@ -236,6 +263,10 @@ class Block extends Entity {
                 outputs[outputIndex].splice(secondLevel, 1)
             }
         }
+        if(selectors.includes(this)) {
+            let index = selectors.indexOf(this);
+            selectors.splice(index, 1);
+        }
 
         this.remove()
 
@@ -283,22 +314,13 @@ class Block extends Entity {
     }
 
     draw() {
-        let evaluate = Array.from(category("blocks"));
-        let isolateInput = this.data.inputs;
         ctx.lineWidth = 2;
-
-        for(let i=0; i<isolateInput.length; i++) {
-            ctx.strokeStyle = "black"
-            if(isolateInput[i] && isolateInput[i] != -1) {
-                ctx.beginPath()
-                let destination = evaluate[isolateInput[i][0]];
-                let outputIndex = isolateInput[i][1]
-                ctx.moveTo(this.x - (this.width / 2) + (i + 1) * (this.width / (types[this.type].inputs + 1)), this.y - (this.height / 2));
-                ctx.lineTo(destination.x - (destination.width / 2) + (outputIndex + 1) * (destination.width / (types[destination.type].outputs + 1)), destination.y + destination.height / 2)
-                ctx.stroke()
-                ctx.closePath()
-            }
+        if(selectors.includes(this)) {
+            ctx.fillStyle = "#FFF";
+            ctx.globalAlpha = 0.2;
+            ctx.fillRect(this.x - this.width / 2 - 15, this.y - this.height / 2 - 15, this.width + 30, this.height + 30)
         }
+        ctx.globalAlpha = 1;
         if(DEBUG) {
             if(this.hovered || holding == (this.index + 1)) {
                 debug.style.display = "block"
