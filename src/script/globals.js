@@ -17,7 +17,7 @@ let toggleDrag = false;
 let checkArray = [];
 let selectors = [];
 let GAME_PAUSED;
-let DEBUG = true;
+let DEBUG = false; // switch this to true in console
 let version = 0.52;
 let scrollPos = 0;
 let totalHeight = 0;
