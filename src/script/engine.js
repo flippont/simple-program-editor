@@ -18,6 +18,23 @@ function clearBlocks() {
     })
 }
 
+function generateBlocksArray() {
+    let blocks = Array.from(category("blocks"));
+    let returnArray = []
+    for(let i=0; i<blocks.length; i++) {
+        returnArray.push({
+            "x": Math.floor(blocks[i].x),
+            "y": Math.floor(blocks[i].y),
+            "data": {
+                "inputs": blocks[i].data.inputs,
+                "outputs": blocks[i].data.outputs
+            },
+            "type": blocks[i].type
+        })
+    }
+    return returnArray
+}
+
 function add(entity) {
     if (entities.has(entity)) return;
     entities.add(entity)

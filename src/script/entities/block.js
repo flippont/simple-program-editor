@@ -81,14 +81,25 @@ class Block extends Entity {
         for(let i=0; i<this.data.inputs.length; i++) {
             if(evaluate[this.data.inputs[i][0]] == undefined) {
                 this.data.inputs[i] = [-1]
+                if(this.type != "output") {
+                    if(this.type != "input") {
+                        this.currentValue[i] = 0;
+                    } else {
+                        this.currentValue[0] = 1;
+                    }
+                }
             }
         }
         for(let i=0; i<this.data.outputs.length; i++) {
             if(evaluate[this.data.outputs[i][0]] == undefined) {
                 this.data.outputs[i] = [];
-                if(this.type != "input" || this.type != "LED") {
-                    this.currentValue[i] = 0;
-                }
+                if(this.type != "output") {
+                    if(this.type != "input") {
+                        this.currentValue[i] = 0;
+                    } else {
+                        this.currentValue[i] = 1;
+                    }
+                } 
             }
         }
     }
@@ -99,20 +110,16 @@ class Block extends Entity {
             for(let j=0; j<this.data.outputs[i].length; j++) {
                 let subject = evaluate[this.data.outputs[i][j]];
                 if(subject == undefined) return
-                if(subject.type != "output") {
-                    let newInputs = []
-                    // Gather inputs
-                    for (let k = 0; k < subject.data.inputs.length; k++) {
-                        newInputs.push((subject.data.inputs[k] && subject.data.inputs[k][0] != -1) ? evaluate[subject.data.inputs[k][0]].currentValue[subject.data.inputs[k][1]] : 0)
-                        if(subject.type == "segment") {
-                            subject.currentValue[k] = newInputs[k]
-                        }
+                let newInputs = []
+                // Gather inputs
+                for (let k = 0; k < subject.data.inputs.length; k++) {
+                    newInputs.push((subject.data.inputs[k] && subject.data.inputs[k][0] != -1) ? evaluate[subject.data.inputs[k][0]].currentValue[subject.data.inputs[k][1]] : 0)
+                    if(subject.type == "segment") {
+                        subject.currentValue[k] = newInputs[k]
                     }
-                    if(subject.type != "segment") {
-                        subject.changeState(newInputs)
-                    } 
-                } else {
-                    subject.currentValue = this.currentValue;
+                }
+                if(subject.type != "segment") {
+                    subject.changeState(newInputs)
                 }
                 if(subject.data.outputs) {
                     subject.changeStateBelow()

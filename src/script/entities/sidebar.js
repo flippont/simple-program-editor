@@ -6,9 +6,9 @@ class SideBar extends Entity {
         add(new Selector())
         add(new WireHandle())
         add(new Button(
-            "CANVAS_WIDTH - 70", 
+            "CANVAS_WIDTH - 80", 
             20, 
-            100, 
+            120, 
             40, 
             "Create", 
             "#111", 
@@ -18,9 +18,36 @@ class SideBar extends Entity {
             }
         ))
         add(new Button(
-            "CANVAS_WIDTH - 70", 
-            70,
-            100, 
+            "CANVAS_WIDTH - 80", 
+            60,
+            120, 
+            40, 
+            "Save", 
+            "#111", 
+            false,
+            () => {
+                let saveItem = [];
+                saveItem.push(types);
+                saveItem.push(generateBlocksArray())
+                download(JSON.stringify(saveItem, null, " "), "circuit", "application/json")
+            }
+        ))
+        add(new Button(
+            "CANVAS_WIDTH - 80", 
+            100,
+            120, 
+            40, 
+            "Load", 
+            "#111", 
+            false,
+            () => {
+                loadFile();
+            }
+        ))
+        add(new Button(
+            "CANVAS_WIDTH - 80", 
+            140,
+            120, 
             40, 
             "Clear", 
             "#111", 
@@ -41,6 +68,10 @@ class SideBar extends Entity {
         let blocks = Array.from(category("blocks"));
         for(let block of blocks) {
             block.remove();
+        }
+        let buttons = Array.from(category("SideButtons"));
+        for(let button of buttons) {
+            button.remove();
         }
         totalHeight = 0;
         for(let i=0; i<Object.keys(types).length; i++) {

@@ -17,8 +17,8 @@ let toggleDrag = false;
 let checkArray = [];
 let selectors = [];
 let GAME_PAUSED;
-let DEBUG = false; // switch this to true in console
-let version = 0.52;
+let DEBUG = false;
+let version = 0.6;
 let scrollPos = 0;
 let totalHeight = 0;
 
@@ -39,6 +39,10 @@ let types = {
         outputs: 0,
         width: 30,
         height: 40,
+        table: {
+            i0: [0, 1],
+            o0: [0, 1],
+        },
         colour: "blue"
     },
     "LED": {

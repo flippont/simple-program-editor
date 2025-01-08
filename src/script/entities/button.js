@@ -4,6 +4,9 @@ class Button extends Entity {
         this.categories = ["button"]
         this.x = this.defX = x;
         this.y = this.defY = y;
+        if(this.x == 100) {
+            this.categories.push("SideButtons")
+        }
         this.width = width;
         this.function = logic;
         this.height = height;
@@ -18,6 +21,8 @@ class Button extends Entity {
     }
     run() {
         this.hovered = false;
+        let select = Array.from(category("selector"));
+
         if(holding != -1) return false
         if(typeof this.defX == "string") {
             this.x = eval(this.defX)
@@ -27,8 +32,10 @@ class Button extends Entity {
         }
         if(MOUSE_POSITION.x > this.x - this.width / 2 && MOUSE_POSITION.x < this.x + this.width / 2) {
             if(MOUSE_POSITION.y > this.y && MOUSE_POSITION.y < (this.y + this.height)) {
-                this.hovered = true;
-                if(MOUSE_DOWN && !this.triggered) {
+                if(!select[0].active) {
+                    this.hovered = true;                    
+                }
+                if(MOUSE_DOWN && !this.triggered && !select[0].active) {
                     this.function();
                     selectors = [];
                     this.triggered = true;
