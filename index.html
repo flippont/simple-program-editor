@@ -5,35 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Program Editor</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
 </head>
 
 <body>
     <link rel="stylesheet" href="./src/styles/style.css">
     
-    <div id=popUp>
-        <div class="modal-content">
-            <input type="text" id=nameInput placeholder="Gate name">
-            <div id=colourPickerWrapper>
-                <input type="color" id=colourInput name=head value=#e66465 onchange="colourValue = this.value"/>
-                <span class="colourPreview">Colour Preview</span>
-            </div>
-            <div class="buttonCont">
-                <button id=cancelButton onclick="closePopUp()">Cancel</button>
-                <button id=mainButton onclick="createNewBlock();">Save</button>
-            </div>
-        </div>
-    </div>
+    <div id=loadMenu class="hidden"></div>
+    <input id=titleInput class="hidden" type="text">
     <canvas id=g></canvas>
     <div id=debug>
-        <p>
-            X Position: <span id=xPos></span>, Y Position: <span id=yPos></span>
-        </p>
-        <p>
-            Inputs: <span id=inputDiv></span>, Outputs: <span id=outputDiv></span>
-        </p>
-        <p>
-            Value: <span id=valueDiv></span>
-        </p>    
+        <p>X Position: <span id=xPos></span>, Y Position: <span id=yPos></span></p>
+        <p>Inputs: <span id=inputDiv></span>, Outputs: <span id=outputDiv></span></p>
+        <p>Value: <span id=valueDiv></span></p>    
     </div>
     <script src="./src/script/index.js"></script>
     <script src="./src/script/globals.js"></script>
@@ -45,6 +29,7 @@
     <script src="./src/script/entities/block.js"></script>
     <script src="./src/script/entities/wireHandle.js"></script>
     <script src="./src/script/entities/scrollbar.js"></script>
+    <script src="./src/script/entities/popup.js"></script>
     <script src="./src/script/entities/select.js"></script>
     <script src="./src/script/entities/segment.js"></script>
     <script src="./src/script/entities/LED.js"></script>
@@ -52,7 +37,10 @@
     <script src="./src/script/entities/cursor.js"></script>
     <script src="./src/script/entities/sidebar.js"></script>
     <script src="./src/script/entities/button.js"></script>
+
+    <script src="./src/script/scenes.js"></script>
     <script src="./src/script/engine.js"></script>
+
 </body>
 
 </html>

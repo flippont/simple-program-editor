@@ -15,10 +15,11 @@ class defaultBlock extends Block {
                 this.data.outputs.push([]);
                 if(this.type != "input") {
                     this.currentValue.push(0)
-                } else {
-                    this.currentValue.push(1)
                 }
             }
+        }
+        if(this.type == "input") {
+            this.currentValue = [1]
         }
         if(this.type == "output") {
             this.currentValue = [0]

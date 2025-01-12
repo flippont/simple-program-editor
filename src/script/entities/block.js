@@ -27,11 +27,10 @@ class Block extends Entity {
     }
     
     run() {
+        let popUp = Array.from(category("popup"));
+        if(popUp[0]) return
+        
         let evaluate = Array.from(category("blocks"));
-
-        if(!MOUSE_DOWN && this.x < 220) {
-            this.destroy()
-        }
         // Convert inputs to index
         if(this.type === "input") {
             if (DOWN[32] && !this.toggled && this.hovered) {
@@ -41,14 +40,14 @@ class Block extends Entity {
             if (!DOWN[32]) {
                 this.toggled = false;
             }
-            this.changeStateBelow()
+        } else {
+            this.loopStates()
         }
     
         this.hovered = false
         this.index = evaluate.indexOf(this)
 
         this.mouseOver()
-        this.checkInputValid()
         // Mouse down check
         if(MOUSE_DOWN) {
             if(holding != (this.index + 1)) return
@@ -73,6 +72,24 @@ class Block extends Entity {
             this.layer = 20;
             holding = -1;
         }
+        if(!MOUSE_DOWN && this.x < 220) {
+            this.destroy()
+        }
+    }
+
+    loopStates() {
+        let evaluate = Array.from(category("blocks"));
+        let newInputs = []
+        // Gather inputs
+        for (let k = 0; k < this.data.inputs.length; k++) {
+            newInputs.push((this.data.inputs[k] && this.data.inputs[k][0] != -1) ? evaluate[this.data.inputs[k][0]].currentValue[this.data.inputs[k][1]] : 0)
+            if(this.type == "segment") {
+                this.currentValue[k] = newInputs[k]
+            }
+        }
+        if(this.type != "segment") {
+            this.changeState(newInputs)
+        }
     }
 
     checkInputValid() {
@@ -81,25 +98,21 @@ class Block extends Entity {
         for(let i=0; i<this.data.inputs.length; i++) {
             if(evaluate[this.data.inputs[i][0]] == undefined) {
                 this.data.inputs[i] = [-1]
-                if(this.type != "output") {
-                    if(this.type != "input") {
-                        this.currentValue[i] = 0;
-                    } else {
-                        this.currentValue[0] = 1;
-                    }
+                if(this.type != "input") {
+                    this.currentValue[i] = 0;
+                } else {
+                    this.currentValue[0] = 1;
                 }
             }
         }
         for(let i=0; i<this.data.outputs.length; i++) {
             if(evaluate[this.data.outputs[i][0]] == undefined) {
                 this.data.outputs[i] = [];
-                if(this.type != "output") {
-                    if(this.type != "input") {
-                        this.currentValue[i] = 0;
-                    } else {
-                        this.currentValue[i] = 1;
-                    }
-                } 
+                if(this.type != "input") {
+                    this.currentValue[i] = 0;
+                } else {
+                    this.currentValue[i] = 1;
+                }
             }
         }
     }
@@ -110,17 +123,7 @@ class Block extends Entity {
             for(let j=0; j<this.data.outputs[i].length; j++) {
                 let subject = evaluate[this.data.outputs[i][j]];
                 if(subject == undefined) return
-                let newInputs = []
-                // Gather inputs
-                for (let k = 0; k < subject.data.inputs.length; k++) {
-                    newInputs.push((subject.data.inputs[k] && subject.data.inputs[k][0] != -1) ? evaluate[subject.data.inputs[k][0]].currentValue[subject.data.inputs[k][1]] : 0)
-                    if(subject.type == "segment") {
-                        subject.currentValue[k] = newInputs[k]
-                    }
-                }
-                if(subject.type != "segment") {
-                    subject.changeState(newInputs)
-                }
+                subject.loopStates();
                 if(subject.data.outputs) {
                     subject.changeStateBelow()
                 }
@@ -250,19 +253,20 @@ class Block extends Entity {
 
     destroy() {
         let evaluate = Array.from(category("blocks"));
-
         // Check above
         for(let i=0; i<this.data.outputs.length; i++) {
             for(let j=0; j<this.data.outputs[i].length; j++) {
                 let evalElement = evaluate[this.data.outputs[i][j]];
-                let inputIndex = evalElement.data.inputs.map((x, index) => {
-                    if(x[0] == this.index) {
-                        return index;
-                    }
-                })
-                for(let indexItem of inputIndex) {
-                    if(indexItem > -1) {
-                        evalElement.data.inputs[indexItem] = [-1];
+                if(evalElement) {
+                    let inputIndex = evalElement.data.inputs.map((x, index) => {
+                        if(x[0] == this.index) {
+                            return index;
+                        }
+                    })
+                    for(let indexItem of inputIndex) {
+                        if(indexItem > -1) {
+                            evalElement.data.inputs[indexItem] = [-1];
+                        }
                     }
                 }
             }
@@ -270,20 +274,22 @@ class Block extends Entity {
 
         // Check below
         for(let k=0; k<this.data.inputs.length; k++) {
-            if(this.data.inputs[k] && this.data.inputs[k][0] != -1) {
-                let outputs = evaluate[this.data.inputs[k][0]].data.outputs;
-                let outputIndex = this.data.inputs[k][1]
-                let secondLevel = outputs[outputIndex].indexOf(this.index);
-                outputs[outputIndex].splice(secondLevel, 1)
+            if(this.data.inputs[k]) {
+                let outputs = evaluate[this.data.inputs[k][0]];
+                if(outputs) {
+                    let outputIndex = this.data.inputs[k][1]
+                    let secondLevel = outputs.data.outputs[outputIndex].indexOf(this.index);
+                    outputs.data.outputs[outputIndex].splice(secondLevel, 1)
+                }
             }
         }
+
         if(selectors.includes(this)) {
             let index = selectors.indexOf(this);
             selectors.splice(index, 1);
         }
 
         this.remove()
-
         // Final Check on all
         this.reduceItems(this.index)
     }

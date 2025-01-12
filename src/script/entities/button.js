@@ -1,5 +1,5 @@
 class Button extends Entity {
-    constructor(x, y, width, height, text, colour = "#FFF", border = false, logic = "") {
+    constructor(x, y, width, height, text, colour = "#FFF", border = false, logic = "", disabled) {
         super()
         this.categories = ["button"]
         this.x = this.defX = x;
@@ -15,14 +15,18 @@ class Button extends Entity {
         this.text = text;
         this.triggered = false;
         this.hovered = false;
-    }
-    get z() {
-        return 11;
+        this.index = 0;
+        this.disabled = disabled || (() => false);
+        this.layer = 11;
     }
     run() {
+        let disabled = this.disabled()
         this.hovered = false;
         let select = Array.from(category("selector"));
+        let buttons = Array.from(category("button"));
+        let popUp = Array.from(category("popup"));
 
+        this.index = buttons.indexOf(this);
         if(holding != -1) return false
         if(typeof this.defX == "string") {
             this.x = eval(this.defX)
@@ -32,26 +36,37 @@ class Button extends Entity {
         }
         if(MOUSE_POSITION.x > this.x - this.width / 2 && MOUSE_POSITION.x < this.x + this.width / 2) {
             if(MOUSE_POSITION.y > this.y && MOUSE_POSITION.y < (this.y + this.height)) {
-                if(!select[0].active) {
-                    this.hovered = true;                    
-                }
-                if(MOUSE_DOWN && !this.triggered && !select[0].active) {
-                    this.function();
-                    selectors = [];
-                    this.triggered = true;
+                if(!popUp[0] || popUps[popUp[0].type].entities.includes(this)) {
+                    if(select[0] && !select[0].active || !select[0]) {
+                        this.hovered = true;                    
+                    }
                 }
             }
         }
-        if(!MOUSE_DOWN) {
-            this.triggered = false;
+        if(MOUSE_DOWN && !this.triggered && this.hovered && !disabled) {
+            if(clickedButton != -1) return
+            clickedButton = this.index;
+            this.function();
+            selectors = [];
+            this.triggered = true;
+        } else {
+            if(!MOUSE_DOWN){ 
+                this.triggered = false;
+                clickedButton = -1;
+            }
         }
     }
     draw() {
-        if(this.hovered) {
+        let disabled = this.disabled()
+        if(this.hovered && !disabled) {
+            console.log(clickedButton)
             document.body.style.cursor = "pointer"
+            ctx.globalAlpha = 0.8;
+        }
+        if(disabled) {
             ctx.globalAlpha = 0.4;
         }
-        ctx.fillStyle = this.colour;
+        ctx.fillStyle = (this.colour == "value") ? colourValue: this.colour;
         ctx.strokeStyle = this.border;
         ctx.lineWidth = 2;
         ctx.beginPath();

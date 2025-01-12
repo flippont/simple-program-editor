@@ -1,4 +1,3 @@
-add(new SideBar())
 canvasPrototype.wrap = function(f) {
     const { resolveColor } = this;
     this.save();
@@ -16,23 +15,6 @@ function clearBlocks() {
     blocks.forEach((element) => {
         element.remove()
     })
-}
-
-function generateBlocksArray() {
-    let blocks = Array.from(category("blocks"));
-    let returnArray = []
-    for(let i=0; i<blocks.length; i++) {
-        returnArray.push({
-            "x": Math.floor(blocks[i].x),
-            "y": Math.floor(blocks[i].y),
-            "data": {
-                "inputs": blocks[i].data.inputs,
-                "outputs": blocks[i].data.outputs
-            },
-            "type": blocks[i].type
-        })
-    }
-    return returnArray
 }
 
 function add(entity) {
@@ -63,10 +45,16 @@ function draw() {
     //draw stuff
     ctx.fillStyle = "#aaa";
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    if(html[screen].draw){ 
+        html[screen].draw()
+    }
+
     ctx.textAlign = "right"
     ctx.font = "bold 15px Arial"
     ctx.fillStyle = "#000";
     let y = CANVAS_HEIGHT;
+
     for (const line of [
         (DEBUG) ? ("FPS: " + ~~(1 / elapsed)) : "",
         (DEBUG) ? ("Entities: " + sortedEntities.length) : "",
@@ -91,3 +79,4 @@ function draw() {
 }
 
 requestAnimationFrame(draw)
+changeScene(screen)

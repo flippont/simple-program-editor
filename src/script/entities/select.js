@@ -11,6 +11,8 @@ class Selector extends Entity {
     run() {
         let blocks = Array.from(category("blocks"))
         let cursors = Array.from(category("cursor"));
+        let popUp = Array.from(category("popup"));
+        if(popUp[0]) return
 
         if(MOUSE_DOWN && holding == -1 && DOWN_MOUSE_POSITION.x > 220 && cursors.length == 0) {
             this.x = DOWN_MOUSE_POSITION.x
@@ -47,7 +49,8 @@ class Selector extends Entity {
         }
         if(DOWN[46]) {
             for(let i=0; i<selectors.length; i++) {
-                selectors[i].destroy();
+                selectors[i].layer = 0;
+                selectors[i].x = 100;
             }
         }
         if(this.width + this.x <= 220) {

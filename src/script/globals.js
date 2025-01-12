@@ -10,7 +10,6 @@ var ctx = canvas.getContext("2d");
 let entities = new Set()
 let entityCategories = new Map();
 let sortedEntities = [];
-let entityPos = {}
 let holding = -1;
 let blocks = [];
 let toggleDrag = false;
@@ -18,13 +17,25 @@ let checkArray = [];
 let selectors = [];
 let GAME_PAUSED;
 let DEBUG = false;
-let version = 0.6;
+let version = 0.7;
 let scrollPos = 0;
 let totalHeight = 0;
+let clickedButton = -1;
+let saveData = JSON.parse(localStorage.getItem("saveData")) || [];
+let currentSaveFile = -1;
 
-let colourValue = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
-colourInput.value = colourValue
+let colourValue = "#"+(Math.random()*0xFFFFFF<<0).toString(16);
 canvasPrototype = CanvasRenderingContext2D.prototype;
+
+let drawScreens = {
+    "main menu": () => {},
+    "options": () => {},
+    "creation menu": () => {},
+    "loadsave menu": () => {},
+    "play": () => {}
+}
+let screen = "main menu"
+let previousScreen = screen
 
 let types = {
     "input": {
@@ -91,14 +102,9 @@ let types = {
 };
 
 function createNewBlock() {
-    let name = nameInput.value.toUpperCase();
-    let gates = Array.from(category("blocks"));
-    if(name.trim().length != 0 && types[name] == undefined && gates.filter((gate) => gate.type == "input").length > 0) {
-        generateTable(name);
-        colourValue = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
-        colourInput.value = colourValue = colourValue;
-        colourPickerWrapper.style.backgroundColor = colourValue;
-    }
+    let name = titleInput.value.toUpperCase();
+    generateTable(name);
+    colourValue = "#"+(Math.random()*0xFFFFFF<<0).toString(16);
 }
 
 function generateTable(name) {
@@ -107,7 +113,6 @@ function generateTable(name) {
     const inputBlocks = [];    
     const outputBlocks = []; 
     let table = {};
-    colourValue = colourInput.value;
     for(let i=0; i<gates.length; i++) {
         if(gates[i].type == "input") {
             inputBlocks.push(gates[i])
@@ -143,5 +148,5 @@ function generateTable(name) {
     }
     types[name] = object;
     sidebar[0].regenerate();
-    closePopUp()
+    closePopUp("colour")
 }
