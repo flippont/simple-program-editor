@@ -129,7 +129,6 @@ function generateTable(name) {
             bin = `0${bin}`;
         }
         for (let j = 0; j < bin.length; j++) {
-            console.log(parseInt(bin[bin.length-j-1]))
             inputBlocks[j].currentValue[0] = parseInt(bin[bin.length-j-1]);
             inputBlocks[j].changeStateBelow();
             table[`i${j}`].push(parseInt(bin[bin.length-j-1]));

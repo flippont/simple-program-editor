@@ -59,7 +59,6 @@ class Button extends Entity {
     draw() {
         let disabled = this.disabled()
         if(this.hovered && !disabled) {
-            console.log(clickedButton)
             document.body.style.cursor = "pointer"
             ctx.globalAlpha = 0.8;
         }
